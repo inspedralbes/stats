@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Repo Stats</title>
+</head>
+
+<body>
+    <h1>Estadístiques per autor en repositori Git</h1>
+    <input type="text" id="repoUrl" placeholder="Introduir URL del repositori Git">
+    <button onclick="getRepoStats()">Obtenir estadístiques</button>
+
+    <div id="stats">
+        <!-- Les estadístiques es mostraran aquí -->
+    </div>
+
+    <script>
+        // Defineix l'URL del backend i el port
+        const BACKEND_URL = "http://localhost:3000";  // Aquí pots canviar la URL i el port segons el teu entorn
+
+        // Funció per obtenir les estadístiques
+        function getRepoStats() {
+            const repoUrl = document.getElementById('repoUrl').value;
+
+            // Crear la URL de la petició utilitzant BACKEND_URL
+            const requestUrl = `${BACKEND_URL}/stats?repoUrl=${encodeURIComponent(repoUrl)}`;
+
+            // Realitzar la petició GET al servidor backend
+            fetch(requestUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let statsHTML = '<ul>';
+                    data.forEach(item => {
+                        statsHTML += `<li>${item.author}: ${item.lines} línies de codi</li>`;
+                    });
+                    statsHTML += '</ul>';
+                    document.getElementById('stats').innerHTML = statsHTML;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>
